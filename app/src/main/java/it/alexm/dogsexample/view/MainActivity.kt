@@ -1,7 +1,8 @@
-package it.alexm.dogsexample
+package it.alexm.dogsexample.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import it.alexm.dogsexample.R
 
 class MainActivity : AppCompatActivity() {
 
