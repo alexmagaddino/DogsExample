@@ -29,6 +29,9 @@ class ListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         btn_show_detail.setOnClickListener {
             val action = ListFragmentDirections.toDetail()
+            //setto un argument direttamente dall'action
+            // questo argument è passato al detail fragment
+            action.dogId = 5
             Navigation.findNavController(it).navigate(action)
         }
     }

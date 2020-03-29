@@ -25,6 +25,12 @@ class DetailFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        arguments?.also {
+            val id = DetailFragmentArgs.fromBundle(it).dogId
+            textView.text = id.toString()
+        }
+
         btn_to_list.setOnClickListener {
             Navigation.findNavController(it).navigate(R.id.back_to_list)
         }
