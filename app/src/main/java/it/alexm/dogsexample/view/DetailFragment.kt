@@ -15,6 +15,8 @@ import kotlinx.android.synthetic.main.fragment_detail.*
  */
 class DetailFragment : Fragment() {
 
+    private var dogId = 0
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -27,12 +29,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.also {
-            val id = DetailFragmentArgs.fromBundle(it).dogId
-            textView.text = id.toString()
-        }
-
-        btn_to_list.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.back_to_list)
+            dogId = DetailFragmentArgs.fromBundle(it).dogId
         }
     }
 
