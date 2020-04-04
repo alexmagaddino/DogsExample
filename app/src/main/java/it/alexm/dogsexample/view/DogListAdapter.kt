@@ -7,14 +7,17 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import it.alexm.dogsexample.R
+import it.alexm.dogsexample.getProgressDrawable
+import it.alexm.dogsexample.loadImage
 import it.alexm.dogsexample.model.DogBreed
+import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_dog.view.*
 
 
 /**
  * Created by alexm on 04/04/2020
  */
-class DogListAdapter(val dogsList: ArrayList<DogBreed> = arrayListOf()) :
+class DogListAdapter(private val dogsList: ArrayList<DogBreed> = arrayListOf()) :
     RecyclerView.Adapter<DogListAdapter.DogViewHolder>() {
 
     fun updateDogsList(newList: List<DogBreed>) {
@@ -33,6 +36,10 @@ class DogListAdapter(val dogsList: ArrayList<DogBreed> = arrayListOf()) :
     override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
         holder.view.name.text = dogsList[position].dogBreed
         holder.view.lifeSpan.text = dogsList[position].lifeSpan
+        holder.view.itemImage.loadImage(
+            dogsList[position].imageUrl,
+            getProgressDrawable(holder.view.context)
+        )
         holder.view.setOnClickListener {
             val action = ListFragmentDirections.toDetail()
             dogsList[position].breedId?.toInt()?.also { id ->
