@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import it.alexm.dogsexample.R
+import it.alexm.dogsexample.setVisible
 import it.alexm.dogsexample.viewmodel.ListViewModel
 import kotlinx.android.synthetic.main.fragment_list.*
 
@@ -44,24 +45,32 @@ class ListFragment : Fragment() {
             adapter = mAdapter
         }
 
+        refreshLayout.setOnRefreshListener {
+            recyclerView.setVisible(false)
+            listError.setVisible(false)
+            loadingView.setVisible(true)
+            viewModel.refresh()
+            refreshLayout.isRefreshing = false
+        }
+
         observeViewModel()
     }
 
     private fun observeViewModel() {
         viewModel.apply {
             dogs.observe(viewLifecycleOwner, Observer {
-                recyclerView.visibility = VISIBLE
+                recyclerView.setVisible(true)
                 mAdapter.updateDogsList(it)
             })
-            dogsError.observe(viewLifecycleOwner, Observer {
-                listError.visibility = if (it) VISIBLE else GONE
+            error.observe(viewLifecycleOwner, Observer {
+                listError.setVisible(it)
             })
             loading.observe(viewLifecycleOwner, Observer {
-                loadingView.visibility = if (it) {
-                    listError.visibility = GONE
-                    recyclerView.visibility = GONE
-                    VISIBLE
-                } else GONE
+                loadingView.setVisible(it)
+                if (it) {
+                    listError.setVisible(false)
+                    recyclerView.setVisible(false)
+                }
             })
         }
     }
