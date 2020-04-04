@@ -23,9 +23,9 @@ fun getProgressDrawable(context: Context) = CircularProgressDrawable(context).ap
     start()
 }
 
-fun ImageView.loadImage(url: String?, progressDrawable: CircularProgressDrawable) {
+fun ImageView.loadImage(url: String?) {
     val options = RequestOptions()
-        .placeholder(progressDrawable)
+        .placeholder(getProgressDrawable(context))
         .error(R.drawable.ic_launcher_foreground)
 
     Glide.with(context)

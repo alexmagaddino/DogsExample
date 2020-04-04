@@ -1,6 +1,5 @@
 package it.alexm.dogsexample.view
 
-import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +9,6 @@ import it.alexm.dogsexample.R
 import it.alexm.dogsexample.getProgressDrawable
 import it.alexm.dogsexample.loadImage
 import it.alexm.dogsexample.model.DogBreed
-import kotlinx.android.synthetic.main.fragment_detail.view.*
 import kotlinx.android.synthetic.main.item_dog.view.*
 
 
@@ -36,10 +34,7 @@ class DogListAdapter(private val dogsList: ArrayList<DogBreed> = arrayListOf()) 
     override fun onBindViewHolder(holder: DogViewHolder, position: Int) {
         holder.view.name.text = dogsList[position].dogBreed
         holder.view.lifeSpan.text = dogsList[position].lifeSpan
-        holder.view.itemImage.loadImage(
-            dogsList[position].imageUrl,
-            getProgressDrawable(holder.view.context)
-        )
+        holder.view.itemImage.loadImage(dogsList[position].imageUrl)
         holder.view.setOnClickListener {
             val action = ListFragmentDirections.toDetail()
             dogsList[position].breedId?.toInt()?.also { id ->
