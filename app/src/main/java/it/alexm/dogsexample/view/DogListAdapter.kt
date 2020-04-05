@@ -37,9 +37,7 @@ class DogListAdapter(private val dogsList: ArrayList<DogBreed> = arrayListOf()) 
         holder.view.itemImage.loadImage(dogsList[position].imageUrl)
         holder.view.setOnClickListener {
             val action = ListFragmentDirections.toDetail()
-            dogsList[position].breedId?.toInt()?.also { id ->
-                action.dogId = id
-            }
+            action.dogId = dogsList[position].uuid
             Navigation.findNavController(it).navigate(action)
         }
     }

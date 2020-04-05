@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 
 import it.alexm.dogsexample.R
+import it.alexm.dogsexample.loadImage
 import it.alexm.dogsexample.model.DogBreed
 import it.alexm.dogsexample.model.Result
 import it.alexm.dogsexample.viewmodel.DetailViewModel
@@ -44,7 +45,7 @@ class DetailFragment : Fragment() {
     }
 
     private fun observeViewModel(dogId: Int) {
-        detailViewModel.getDetail().observe(viewLifecycleOwner, Observer { res ->
+        detailViewModel.getDetail(dogId).observe(viewLifecycleOwner, Observer { res ->
             when (res) {
                 is Result.Loading -> {
                 }
@@ -56,6 +57,7 @@ class DetailFragment : Fragment() {
                         dogPurpose.text = it.bredFor
                         dogTemperament.text = it.temperament
                         dogLifespan.text = it.lifeSpan
+                        imageView.loadImage(it.imageUrl)
                     }
                 }
             }

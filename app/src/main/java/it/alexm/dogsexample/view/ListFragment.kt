@@ -49,7 +49,7 @@ class ListFragment : Fragment() {
             recyclerView.setVisible(false)
             listError.setVisible(false)
             loadingView.setVisible(true)
-            viewModel.refresh()
+            viewModel.refresh(true)
             refreshLayout.isRefreshing = false
         }
 
