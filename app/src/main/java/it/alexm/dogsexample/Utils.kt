@@ -5,6 +5,7 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -32,4 +33,9 @@ fun ImageView.loadImage(url: String?) {
         .setDefaultRequestOptions(options)
         .load(url)
         .into(this)
+}
+
+@BindingAdapter("android:imageUrl")
+fun bindLoadedImage(view: ImageView, url: String?) {
+    view.loadImage(url)
 }
