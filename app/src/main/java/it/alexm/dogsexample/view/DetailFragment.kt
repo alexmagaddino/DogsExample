@@ -5,15 +5,24 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation
 
 import it.alexm.dogsexample.R
+import it.alexm.dogsexample.loadImage
+import it.alexm.dogsexample.model.DogBreed
+import it.alexm.dogsexample.model.Result
+import it.alexm.dogsexample.viewmodel.DetailViewModel
 import kotlinx.android.synthetic.main.fragment_detail.*
 
 /**
  * A simple [Fragment] subclass.
  */
 class DetailFragment : Fragment() {
+
+    private lateinit var detailViewModel: DetailViewModel
+    private var dogId = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,14 +35,32 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        detailViewModel = ViewModelProvider(this).get(DetailViewModel::class.java)
+
         arguments?.also {
-            val id = DetailFragmentArgs.fromBundle(it).dogId
-            textView.text = id.toString()
+            dogId = DetailFragmentArgs.fromBundle(it).dogId
         }
 
-        btn_to_list.setOnClickListener {
-            Navigation.findNavController(it).navigate(R.id.back_to_list)
-        }
+        observeViewModel(dogId)
     }
 
+    private fun observeViewModel(dogId: Int) {
+        detailViewModel.getDetail(dogId).observe(viewLifecycleOwner, Observer { res ->
+            when (res) {
+                is Result.Loading -> {
+                }
+                is Result.Error<*> -> {
+                }
+                is Result.Success<*> -> {
+                    (res.value as? DogBreed)?.let {
+                        dogName.text = it.dogBreed
+                        dogPurpose.text = it.bredFor
+                        dogTemperament.text = it.temperament
+                        dogLifespan.text = it.lifeSpan
+                        imageView.loadImage(it.imageUrl)
+                    }
+                }
+            }
+        })
+    }
 }
