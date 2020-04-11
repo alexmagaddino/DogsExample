@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import it.alexm.dogsexample.R
-import it.alexm.dogsexample.getProgressDrawable
 import it.alexm.dogsexample.loadImage
 import it.alexm.dogsexample.model.DogBreed
 import kotlinx.android.synthetic.main.item_dog.view.*

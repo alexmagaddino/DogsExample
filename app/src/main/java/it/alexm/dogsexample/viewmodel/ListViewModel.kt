@@ -2,22 +2,24 @@ package it.alexm.dogsexample.viewmodel
 
 import android.app.Application
 import android.widget.Toast
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import androidx.lifecycle.viewModelScope
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import it.alexm.dogsexample.model.DogBreed
-import it.alexm.dogsexample.model.DogDatabase
+import it.alexm.dogsexample.model.db.DogDatabase
 import it.alexm.dogsexample.model.DogSharedPrefs
 import it.alexm.dogsexample.model.api.DogApiService
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
 /**
  * Created by alexm on 04/04/2020
  */
-class ListViewModel(application: Application) : BaseViewModel(application) {
+class ListViewModel(application: Application) : AndroidViewModel(application) {
 
     private val prefs = DogSharedPrefs(application)
 
@@ -43,8 +45,12 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
 
     private fun fetchFromDb() {
         loading.value = true
-        launch {
-            updateLiveData(DogDatabase(getApplication()).dogDao().getAllDogs())
+        viewModelScope.launch {
+            updateLiveData(
+                DogDatabase(
+                    getApplication()
+                ).dogDao().getAllDogs()
+            )
             Toast.makeText(getApplication(), "Get from Db", Toast.LENGTH_SHORT).show()
         }
     }
@@ -52,19 +58,35 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     private fun fetchFromRemote() {
         loading.value = true
 
-        disposable.add(
-            dogApiService.fetchDogs()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    storeDogsLocally(it)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val dogs = dogApiService.fetchDogs()
+                storeDogsLocally(dogs)
+
+                withContext(Dispatchers.Main) {
                     Toast.makeText(getApplication(), "Get from Remote", Toast.LENGTH_SHORT).show()
-                }, {
-                    it.printStackTrace()
-                    error.value = true
-                    loading.value = false
-                })
-        )
+                }
+
+            } catch (t: Throwable) {
+                t.printStackTrace()
+                error.value = false
+                loading.value = false
+            }
+        }
+
+//        disposable.add(
+//            dogApiService.fetchDogs()
+//                .subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe({
+//                    storeDogsLocally(it)
+//                    Toast.makeText(getApplication(), "Get from Remote", Toast.LENGTH_SHORT).show()
+//                }, {
+//                    it.printStackTrace()
+//                    error.value = true
+//                    loading.value = false
+//                })
+//        )
     }
 
     private fun updateLiveData(dogList: List<DogBreed>) {
@@ -74,8 +96,9 @@ class ListViewModel(application: Application) : BaseViewModel(application) {
     }
 
     private fun storeDogsLocally(dogList: List<DogBreed>) {
-        launch {
-            val dao = DogDatabase(getApplication()).dogDao()
+        viewModelScope.launch {
+            val dao = DogDatabase(getApplication())
+                .dogDao()
             dao.clear()
             val result = dao.insertAll(*dogList.toTypedArray())
             updateLiveData(dogList.mapIndexed { i, dog ->

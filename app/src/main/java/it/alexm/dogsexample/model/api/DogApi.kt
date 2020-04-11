@@ -10,5 +10,6 @@ import retrofit2.http.GET
  */
 interface DogApi {
     @GET("DevTides/DogsApi/master/dogs.json")
-    fun fetchDogs(): Single<List<DogBreed>>
+//    fun fetchDogs(): Single<List<DogBreed>>
+    suspend fun fetchDogs(): List<DogBreed>
 }

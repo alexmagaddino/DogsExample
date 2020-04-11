@@ -16,11 +16,12 @@ class DogApiService {
     private val api = Retrofit.Builder()
         .baseUrl(BuildConfig.BASE_URL)
         .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
+//        .addCallAdapterFactory(RxJava3CallAdapterFactory.create())
         .build()
         .create(DogApi::class.java)
 
-    fun fetchDogs(): Single<List<DogBreed>> {
-        return api.fetchDogs()
-    }
+    //    fun fetchDogs(): Single<List<DogBreed>> {
+//        return api.fetchDogs()
+//    }
+    suspend fun fetchDogs() = api.fetchDogs()
 }
