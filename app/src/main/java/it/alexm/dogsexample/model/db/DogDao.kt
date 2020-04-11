@@ -1,8 +1,9 @@
-package it.alexm.dogsexample.model
+package it.alexm.dogsexample.model.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import it.alexm.dogsexample.model.DogBreed
 
 
 /**
