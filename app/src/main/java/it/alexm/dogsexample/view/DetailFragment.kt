@@ -1,20 +1,18 @@
 package it.alexm.dogsexample.view
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.Navigation
-
 import it.alexm.dogsexample.R
-import it.alexm.dogsexample.loadImage
+import it.alexm.dogsexample.databinding.FragmentDetailBinding
 import it.alexm.dogsexample.model.DogBreed
 import it.alexm.dogsexample.model.Result
 import it.alexm.dogsexample.viewmodel.DetailViewModel
-import kotlinx.android.synthetic.main.fragment_detail.*
 
 /**
  * A simple [Fragment] subclass.
@@ -23,13 +21,16 @@ class DetailFragment : Fragment() {
 
     private lateinit var detailViewModel: DetailViewModel
     private var dogId = 0
+    private lateinit var detailBinding: FragmentDetailBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_detail, container, false)
+        detailBinding = DataBindingUtil.inflate(
+            inflater, R.layout.fragment_detail, container, false
+        )
+        return detailBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,12 +54,15 @@ class DetailFragment : Fragment() {
                 }
                 is Result.Success<*> -> {
                     (res.value as? DogBreed)?.let {
-                        dogName.text = it.dogBreed
-                        dogPurpose.text = it.bredFor
-                        dogTemperament.text = it.temperament
-                        dogLifespan.text = it.lifeSpan
-                        imageView.loadImage(it.imageUrl)
+                        detailBinding.dog = it
                     }
+                    /* (res.value as? DogBreed)?.let {
+                         dogName.text = it.dogBreed
+                         dogPurpose.text = it.bredFor
+                         dogTemperament.text = it.temperament
+                         dogLifespan.text = it.lifeSpan
+                         imageView.loadImage(it.imageUrl)
+                     }*/
                 }
             }
         })
