@@ -4,14 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="dog"
             type="it.alexm.dogsexample.model.DogBreed" />
+
+        <variable
+            name="palette"
+            type="it.alexm.dogsexample.model.DogPalette" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@{palette.color}"
         tools:context=".view.DetailFragment">
 
         <ImageView
@@ -19,9 +25,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
+            android:imageUrl="@{dog.imageUrl}"
             android:minHeight="200dp"
             android:scaleType="fitCenter"
-            android:imageUrl="@{dog.imageUrl}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

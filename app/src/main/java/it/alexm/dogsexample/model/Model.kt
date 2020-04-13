@@ -1,5 +1,6 @@
 package it.alexm.dogsexample.model
 
+import androidx.annotation.ColorInt
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -41,3 +42,5 @@ data class DogBreed(
     @PrimaryKey(autoGenerate = true)
     var uuid: Int = 0
 }
+
+data class DogPalette(@ColorInt val color: Int)
